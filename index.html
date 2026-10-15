@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Mobil uyumlu, ses ve titreşim geri bildirimli hassas TL yüzde hesaplayıcı">
+  <title>Yüzde Hesaplayıcı</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo-area">
+          <div class="logo-icon">%</div>
+          <div>
+            <h1>Yüzde Hesaplayıcı</h1>
+            <p class="subtitle">Hassas & Canlı Hesaplama</p>
+          </div>
+        </div>
+        <div class="controls-area">
+          <!-- Ses Aç/Kapa Butonu -->
+          <button id="soundToggleBtn" class="icon-btn active" title="Ses Açık/Kapalı" aria-label="Sesi aç/kapat">
+            <svg id="soundOnIcon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+            <svg id="soundOffIcon" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+
+          <!-- Titreşim Aç/Kapa Butonu -->
+          <button id="vibrateToggleBtn" class="icon-btn active" title="Titreşim Açık/Kapalı" aria-label="Titreşimi aç/kapat">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="7" y="2" width="10" height="20" rx="2" ry="2"></rect>
+              <line x1="1" y1="7" x2="3" y2="7"></line>
+              <line x1="1" y1="17" x2="3" y2="17"></line>
+              <line x1="21" y1="7" x2="23" y2="7"></line>
+              <line x1="21" y1="17" x2="23" y2="17"></line>
+            </svg>
+          </button>
+
+          <!-- Açık / Koyu Tema Değiştirme Butonu -->
+          <button id="themeToggleBtn" class="icon-btn" title="Koyu / Açık Mod" aria-label="Temayı değiştir">
+            <!-- Ay (Koyu moddayken gösterilir) -->
+            <svg id="moonIcon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <!-- Güneş (Açık moddayken gösterilir) -->
+            <svg id="sunIcon" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content (Tam ekrana sığan yapı) -->
+    <main class="main-content">
+      <!-- 1. TL Tutarı Ekranı -->
+      <section class="card input-card">
+        <div class="card-label">
+          <span>TL TUTARI</span>
+          <button id="clearBtn" class="clear-btn" type="button">Sıfırla</button>
+        </div>
+        <div class="input-wrapper">
+          <span class="currency-prefix">₺</span>
+          <input 
+            type="text" 
+            id="amountInput" 
+            inputmode="decimal" 
+            placeholder="0" 
+            autocomplete="off" 
+            spellcheck="false"
+            maxlength="16"
+          />
+        </div>
+        <!-- Quick Preset Amounts -->
+        <div class="preset-row">
+          <button class="preset-chip" data-amount="100">100 ₺</button>
+          <button class="preset-chip" data-amount="500">500 ₺</button>
+          <button class="preset-chip" data-amount="1000">1.000 ₺</button>
+          <button class="preset-chip" data-amount="5000">5.000 ₺</button>
+          <button class="preset-chip" data-amount="10000">10.000 ₺</button>
+        </div>
+      </section>
+
+      <!-- 2. 1-100 Arası Hesaplanacak Yüzde (Tekerlek / Drum Wheel) -->
+      <section class="card wheel-card">
+        <div class="card-label">
+          <span>HESAPLANACAK YÜZDE</span>
+          <span class="active-badge" id="activePercentBadge">%20</span>
+        </div>
+
+        <!-- Wheel Outer Container -->
+        <div class="wheel-picker-wrapper" id="wheelPickerWrapper">
+          <div class="wheel-vignette vignette-top"></div>
+          <div class="wheel-vignette vignette-bottom"></div>
+          
+          <!-- Center Selector Lens Frame -->
+          <div class="wheel-lens">
+            <span class="lens-indicator lens-left"></span>
+            <span class="lens-indicator lens-right"></span>
+          </div>
+
+          <!-- Scrollable Wheel Body -->
+          <div class="wheel-viewport" id="wheelViewport">
+            <div class="wheel-padding-top"></div>
+            <div class="wheel-items" id="wheelItemsContainer">
+              <!-- JS generates %1 to %100 items here -->
+            </div>
+            <div class="wheel-padding-bottom"></div>
+          </div>
+        </div>
+
+        <!-- Quick Percentage Shortcuts -->
+        <div class="quick-percentages">
+          <button class="quick-pct-btn" data-pct="1">%1</button>
+          <button class="quick-pct-btn" data-pct="10">%10</button>
+          <button class="quick-pct-btn" data-pct="18">%18</button>
+          <button class="quick-pct-btn active" data-pct="20">%20</button>
+          <button class="quick-pct-btn" data-pct="50">%50</button>
+          <button class="quick-pct-btn" data-pct="100">%100</button>
+        </div>
+      </section>
+
+      <!-- 3. Sonuç Ekranı -->
+      <section class="card result-card">
+        <div class="card-label">
+          <span>HESAPLAMA SONUÇLARI</span>
+          <span class="formula-text" id="formulaText">0 ₺ × %20</span>
+        </div>
+
+        <!-- Ana Sonuç (Yüzde Miktarı) -->
+        <div class="primary-result">
+          <div class="result-subheading">Yüzde Payı (<span id="resultPctLabel">%20</span>)</div>
+          <div class="result-number-container">
+            <span class="result-currency">₺</span>
+            <span class="result-value" id="percentAmount">0,00</span>
+            <button id="copyMainBtn" class="copy-btn" title="Kopyala" aria-label="Sonucu Kopyala">
+              <svg class="icon copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <svg class="icon check-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- İkincil Sonuçlar: Ekleme & İndirim Kartları -->
+        <div class="result-grid">
+          <!-- Tutar + Yüzde -->
+          <div class="sub-result-card plus-card" id="plusCard">
+            <div class="sub-card-header">
+              <span class="badge plus-badge">+ Eklendiğinde</span>
+              <span class="sub-card-title">Tutar + %</span>
+            </div>
+            <div class="sub-card-val" id="totalWithPercent">₺ 0,00</div>
+          </div>
+
+          <!-- Tutar - Yüzde -->
+          <div class="sub-result-card minus-card" id="minusCard">
+            <div class="sub-card-header">
+              <span class="badge minus-badge">- İndirildiğinde</span>
+              <span class="sub-card-title">Tutar - %</span>
+            </div>
+            <div class="sub-card-val" id="totalWithoutPercent">₺ 0,00</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Panoya kopyalandı!</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

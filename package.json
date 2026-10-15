@@ -1,0 +1,12 @@
+{
+  "name": "yuzde-hesaplayici",
+  "version": "1.0.0",
+  "description": "Mobil uyumlu, ses ve titreşim geri bildirimli hassas TL yüzde hesaplayıcı",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["percentage", "calculator", "yuzde", "hesaplayici", "haptic", "mobile"],
+  "author": "",
+  "license": "MIT"
+}
